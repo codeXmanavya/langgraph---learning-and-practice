@@ -1,3 +1,12 @@
+# 1. We will take an essay as input
+# 2. Analyze three aspects in parallel:
+#    - Clarity (how well the ideas are communicated)
+#    - Depth (how thoroughly the topic is explored)
+#    - Language (grammar, vocabulary, style)
+# 3. Each analysis returns feedback and a score out of 10
+# 4. Combine all feedback and scores into a final summary
+# 5. Calculate and return the final score (average of individual scores)
+
 from langgraph.graph import StateGraph,START,END
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel,Field
@@ -7,10 +16,13 @@ import operator
 import os
 
 load_dotenv()
+
+# define llm
 api_key = os.getenv("GOOGLE_API_KEY")
 model = os.getenv("MODEL")
 llm = ChatGoogleGenerativeAI(model= model, api_key = api_key)
 
+# structured output llm
 class EvaluationSchema(BaseModel):
     feedback:str = Field(description="Detailed feedback for the essay"),
     score:int = Field(description="Score out of 10",ge=0, le=10)
@@ -18,6 +30,7 @@ class EvaluationSchema(BaseModel):
 
 structured_llmmodel = llm.with_structured_output(EvaluationSchema)
 
+# state
 class llmstate(TypedDict):
     essay:str
     clarity:str
@@ -29,35 +42,41 @@ class llmstate(TypedDict):
 
 graph = StateGraph(llmstate)
 
+# check clarity of the essay
 def check_clarity(state:llmstate):
     essay = state['essay']
     prompt = f'Evaluate the clarity of the following essay and provide a feedback and assign a score out of 10:{essay}'
     clarity = structured_llmmodel.invoke(prompt)
     return {"clarity":clarity.feedback, "indie_score":[clarity.score]}
 
+# check depth of the esssay
 def check_depth(state:llmstate):
     essay = state['essay']
     prompt = f'Evaluate the depth of the following essay and provide a feedback and assign a score out of 10:{essay}'
     depth = structured_llmmodel.invoke(prompt)
     return {"depth":depth.feedback, "indie_score":[depth.score]}
 
+# check language of the essay
 def check_language(state:llmstate):
     essay = state['essay']
     prompt = f'Evaluate the language of the following essay and provide a feedback and assign a score out of 10:{essay}'
     language = structured_llmmodel.invoke(prompt)
     return {"language":language.feedback, "indie_score":[language.score]}
 
+# give summary based on clarity,depth and language
 def summary(state:llmstate):
     average_score = sum(state['indie_score'])/len(state['indie_score'])
     prompt = f'Summarise the evaluation of the essay based on the essay clarity feedback - {state['clarity']}, essay depth feedback:{state['depth']} and essay language feedback:{state['language']}. Average score is {average_score}'
     summary = structured_llmmodel.invoke(prompt)
     return {"summary":summary.feedback, "final_score":summary.score}
 
+# add nodes
 graph.add_node('check_clarity', check_clarity)
 graph.add_node('check_depth',check_depth)
 graph.add_node('check_language', check_language)
 graph.add_node('summary', summary)
 
+# add edges
 graph.add_edge(START,"check_clarity")
 graph.add_edge(START,"check_depth")
 graph.add_edge(START,"check_language")
@@ -68,8 +87,10 @@ graph.add_edge("check_language","summary")
 
 graph.add_edge("summary",END)
 
+# compile
 workflow = graph.compile()
 
+# execute
 intial_state = {'essay':'''Perfect. Here are a few examples of young creators and devs who basically ignored the usual “Gen Z bucket list” and lived in their code caves—and how it worked out for them:
 
 1. David, the teenage app maker
