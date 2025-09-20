@@ -50,6 +50,31 @@ htmlcov/
 docs/_build/
 site/
 
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+build/
+dist/
+out/
+
+# Vite
+.vite/
+
+# Package lock files (keep package.json but ignore lock files)
+package-lock.json
+yarn.lock
+
+# Frontend development
+*.tsbuildinfo
+*.local
+
+# Backend API
+*.pid
+
 # OS specific files
 .DS_Store
 Thumbs.db
