@@ -1,0 +1,122 @@
+import React from 'react';
+
+const Sidebar = ({ isOpen, onToggle }) => {
+  const conversations = [
+    { id: 1, title: "General Chat", lastMessage: "Hello! How can I help you today?", timestamp: "2 min ago" },
+    { id: 2, title: "Project Discussion", lastMessage: "Let's talk about your project requirements", timestamp: "1 hour ago" },
+    { id: 3, title: "Code Review", lastMessage: "I'll help you review this code", timestamp: "Yesterday" },
+  ];
+
+  return (
+    <>
+      {/* Sidebar */}
+      <div className={`mt-3 mb-3 ml-3 rounded-2xl fixed inset-y-0 left-0 z-50 w-72 lg:w-80 bg-white/95 backdrop-blur-sm shadow-xl transform transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      } lg:translate-x-0 lg:static lg:inset-0 border-r border-gray-200/50 flex flex-col`}>
+        
+        {/* Sidebar Header - User Profile */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50/50 to-indigo-50/50">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-br from-gray-300 to-gray-500 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+                {/* User Avatar - you can replace with an actual image */}
+                <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
+                <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-bold text-gray-900 text-base truncate">John Doe</h2>
+              <div className="flex items-center gap-2 text-xs text-gray-500">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>Online</span>
+              </div>
+            </div>
+          </div>
+          <button 
+            onClick={onToggle}
+            className="lg:hidden p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100/80 transition-all duration-200 hover:scale-105"
+            aria-label="Close sidebar"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <div className="p-4">
+          <button className="w-full flex items-center gap-3 px-4 py-3.5 text-left text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] group">
+            <svg className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <span className="font-semibold">New Conversation</span>
+          </button>
+        </div>
+
+        {/* Conversations History */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="px-4 mb-3">
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Recent Conversations</h3>
+          </div>
+          
+          <div className="px-2 space-y-1">
+            {conversations.map((conversation) => (
+              <div key={conversation.id} className="mx-2 p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 cursor-pointer transition-all duration-200 group border border-transparent hover:border-blue-100/50 hover:shadow-sm">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                      {conversation.title}
+                    </h4>
+                    <p className="text-xs text-gray-500 mt-1.5 truncate group-hover:text-gray-600 transition-colors">
+                      {conversation.lastMessage}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1 ml-3">
+                    <span className="text-xs text-gray-400 flex-shrink-0 group-hover:text-gray-500">
+                      {conversation.timestamp}
+                    </span>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Settings & Help Section - Bottom */}
+        <div className="mt-auto border-t border-gray-200/50 p-4 bg-gray-50/30">
+          <div className="space-y-1">
+            <button className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-gray-700 hover:bg-white/80 hover:text-gray-900 rounded-xl transition-all duration-200 hover:shadow-sm group">
+              <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="text-sm font-medium">Settings</span>
+            </button>
+            
+            <button className="w-full flex items-center gap-3 px-3 py-2.5 text-left text-gray-700 hover:bg-white/80 hover:text-gray-900 rounded-xl transition-all duration-200 hover:shadow-sm group">
+              <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="text-sm font-medium">Help & Support</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Overlay for mobile */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-transparent bg-opacity-50 z-40 lg:hidden"
+          onClick={onToggle}
+        />
+      )}
+    </>
+  );
+};
+
+export default Sidebar;
