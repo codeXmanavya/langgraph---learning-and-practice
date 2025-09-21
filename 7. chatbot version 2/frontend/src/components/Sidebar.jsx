@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, onToggle }) => {
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const navigate = useNavigate();
+
   const conversations = [
     { id: 1, title: "General Chat", lastMessage: "Hello! How can I help you today?", timestamp: "2 min ago" },
     { id: 2, title: "Project Discussion", lastMessage: "Let's talk about your project requirements", timestamp: "1 hour ago" },
@@ -15,36 +19,62 @@ const Sidebar = ({ isOpen, onToggle }) => {
       } lg:translate-x-0 lg:static lg:inset-0 border-r border-gray-200/50 flex flex-col`}>
         
         {/* Sidebar Header - User Profile */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50/50 to-indigo-50/50">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-12 h-12 bg-gradient-to-br from-gray-300 to-gray-500 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
-                {/* User Avatar - you can replace with an actual image */}
-                <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+        <div className="relative">
+          <div className="flex items-center justify-between p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50/50 to-indigo-50/50">
+            <button 
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+              className="flex items-center gap-3 flex-1 hover:bg-white/50 rounded-lg p-2 -m-2 transition-all duration-200"
+            >
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-gray-300 to-gray-500 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+                  {/* User Avatar - you can replace with an actual image */}
+                  <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                </div>
+                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
+                  <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                </div>
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-400 rounded-full border-2 border-white flex items-center justify-center shadow-sm">
-                <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+              <div className="flex-1 min-w-0 text-left">
+                <h2 className="font-bold text-gray-900 text-base truncate">Alok</h2>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span>Online</span>
+                </div>
               </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="font-bold text-gray-900 text-base truncate">John Doe</h2>
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span>Online</span>
-              </div>
-            </div>
+              <svg className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${showProfileDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <button 
+              onClick={onToggle}
+              className="lg:hidden p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100/80 transition-all duration-200 hover:scale-105 ml-2"
+              aria-label="Close sidebar"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          <button 
-            onClick={onToggle}
-            className="lg:hidden p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100/80 transition-all duration-200 hover:scale-105"
-            aria-label="Close sidebar"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+
+          {/* Profile Dropdown */}
+          {showProfileDropdown && (
+            <div className="absolute top-full left-4 right-4 z-50 bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-xl shadow-lg py-2 mt-1">
+              <button
+                onClick={() => {
+                  setShowProfileDropdown(false);
+                  navigate('/signin');
+                }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-red-600 hover:bg-red-50/80 hover:text-red-700 transition-all duration-200 group"
+              >
+                <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span className="text-sm font-medium">Sign Out</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}
