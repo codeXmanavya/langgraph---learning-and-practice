@@ -1,15 +1,60 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/Create_Context';
+import { generateThreadId , getchat} from '../api/chatApi';
+import { SignoutApi } from '../api/authApi';
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const navigate = useNavigate();
 
-  const conversations = [
-    { id: 1, title: "General Chat", lastMessage: "Hello! How can I help you today?", timestamp: "2 min ago" },
-    { id: 2, title: "Project Discussion", lastMessage: "Let's talk about your project requirements", timestamp: "1 hour ago" },
-    { id: 3, title: "Code Review", lastMessage: "I'll help you review this code", timestamp: "Yesterday" },
-  ];
+  // Get user, conversations, and messagesSet from context
+  const {user, conversations, messagesSet } = useContext(UserContext);
+
+  // Start a new conversation thread
+  const handleClick = async(e) => {
+    e.preventDefault();
+    const result = await generateThreadId();
+    if (!result.success) {
+      console.log(result.errors)
+    } else {
+      const active_thread_id = result.thread_id;
+      localStorage.setItem('activeThread', active_thread_id);
+    }
+    // Clear messages for new conversation
+    messagesSet([]);
+  }
+
+  // Switch to a selected conversation thread and fetch its messages
+  const handleThreadClick = async (e,conversation) => {
+    e.preventDefault();
+    messagesSet([]);
+    const clicked_thread_id = conversation;
+    localStorage.setItem('selectedThread', clicked_thread_id);
+    localStorage.setItem('activeThread', clicked_thread_id);
+    const result = await getchat();
+    if (!result.success) {
+      return console.log('error while fetching chat ouside getchat ',result.errors)
+    } else {
+      messagesSet(result.chat_messages)
+    }
+  }
+
+  // Sign out the user and clear local storage
+  const handlesignout = async(e) => {
+    e.preventDefault();
+    const result = await SignoutApi();
+    if (!result.success) {
+      return console.log('error while signout ',result.errors)
+    } else {
+      setShowProfileDropdown(false);
+      localStorage.removeItem('selectedThread');
+      localStorage.removeItem('activeThread');
+      navigate('/signin');
+    }   
+  }
+
 
   return (
     <>
@@ -37,7 +82,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
                 </div>
               </div>
               <div className="flex-1 min-w-0 text-left">
-                <h2 className="font-bold text-gray-900 text-base truncate">Alok</h2>
+                <h2 className="font-bold text-gray-900 text-base truncate">{user}</h2>
                 <div className="flex items-center gap-2 text-xs text-gray-500">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span>Online</span>
@@ -62,9 +107,8 @@ const Sidebar = ({ isOpen, onToggle }) => {
           {showProfileDropdown && (
             <div className="absolute top-full left-4 right-4 z-50 bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-xl shadow-lg py-2 mt-1">
               <button
-                onClick={() => {
-                  setShowProfileDropdown(false);
-                  navigate('/signin');
+                onClick={(e) => {
+                  handlesignout(e);
                 }}
                 className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-red-600 hover:bg-red-50/80 hover:text-red-700 transition-all duration-200 group"
               >
@@ -83,7 +127,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
             <svg className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            <span className="font-semibold">New Conversation</span>
+            <span onClick={handleClick} className="font-semibold">New Conversation</span>
           </button>
         </div>
 
@@ -94,25 +138,13 @@ const Sidebar = ({ isOpen, onToggle }) => {
           </div>
           
           <div className="px-2 space-y-1">
-            {conversations.map((conversation) => (
-              <div key={conversation.id} className="mx-2 p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 cursor-pointer transition-all duration-200 group border border-transparent hover:border-blue-100/50 hover:shadow-sm">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
-                      {conversation.title}
-                    </h4>
-                    <p className="text-xs text-gray-500 mt-1.5 truncate group-hover:text-gray-600 transition-colors">
-                      {conversation.lastMessage}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end gap-1 ml-3">
-                    <span className="text-xs text-gray-400 flex-shrink-0 group-hover:text-gray-500">
-                      {conversation.timestamp}
+            {conversations.map((conversation_thread_id,index) => (
+              
+                  <button onClick={(e) => handleThreadClick(e,conversation_thread_id)}  key={index}>
+                    <span  key={conversation_thread_id} className="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">
+                      {conversation_thread_id}
                     </span>
-                    <div className="w-2 h-2 bg-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  </div>
-                </div>
-              </div>
+                  </button>
             ))}
           </div>
         </div>

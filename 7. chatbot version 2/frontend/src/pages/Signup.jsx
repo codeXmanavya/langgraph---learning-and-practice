@@ -4,18 +4,22 @@ import { useNavigate } from 'react-router-dom'
 
 const SignupPage = () => {
 
+  // formdata state
     const [formData, setFormData] = useState({
         email:'',
         password:''
     });
 
+    // error state
     const [errors, setErrors] = useState([]);
 
+    // setformdata when input changes
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData((prev) => ({...prev, [name] : value}));
     }
 
+    // submit the formdata 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(formData);
@@ -24,6 +28,7 @@ const SignupPage = () => {
 
     const navigate = useNavigate();
 
+    // send formdata to backend
     const handleSignup = async (formData) => {
         const result = await SignupApi(formData);
         console.log(result);

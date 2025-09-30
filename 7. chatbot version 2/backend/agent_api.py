@@ -21,9 +21,10 @@ app.add_middleware(
 
 class Message(BaseModel):
     text: str
+    thread_id: str
 
 @app.post('/')
 async def chatEndpoint(message: Message):
-    CONFIG = {'configurable':{'thread_id':'thread_id'}}
+    CONFIG = {'configurable':{'thread_id':message.thread_id}}
     res = chatbot.invoke({'messages':[HumanMessage(content=message.text)]}, config=CONFIG)
     return {'response':res['messages'][-1].content}

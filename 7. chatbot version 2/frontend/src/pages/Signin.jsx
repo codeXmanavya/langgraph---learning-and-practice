@@ -1,36 +1,59 @@
 import React, { useState } from 'react'
 import { SigninApi } from '../api/authApi';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/Create_Context';
+import { generateThreadId } from '../api/chatApi';
+
 
 const SigninPage = () => {
+  // form data state
     const [formData, setFormData] = useState({
         email:'',
         password:''
     }) 
-
+    
+    // errors state
     const [errors, setErrors] = useState([]);
 
+    // set input to formdata when input changes
     const handleChange = (e) => {
         const {name, value} = e.target;
         setFormData((prev) => ({...prev,[name]:value}))
     }
 
+    // submit the formdata to backend
     const handleSubmit = (e) => {
         e.preventDefault();
         handleSignin(formData);
     }
 
+    // get userDetails, conversationsDetails, messageSet from context
+    const {userDetails, conversationsDetails, messagesSet} = useContext(UserContext);
+
     const navigate = useNavigate();
 
+    // handle signin
     const handleSignin = async (formData) => {
+
+      // send formdata to backend for authentication
         const result = await SigninApi(formData);
-        console.log(result);
         if (!result.success){
             setErrors(result.errors.map((err) => err.msg));
         } else {
+          // if authentication happens
             setErrors([]);
+            conversationsDetails(result.userData);
+            userDetails(result.user);
             navigate('/');
-            console.log('username',result.username);
+            const generation = await generateThreadId();
+            if (!generation.success) {
+              console.log(generation.errors)
+            } else {
+              const active_thread_id = generation.thread_id;
+              localStorage.setItem('activeThread', active_thread_id);
+            }
+            messagesSet([]);
         }
     }
 
