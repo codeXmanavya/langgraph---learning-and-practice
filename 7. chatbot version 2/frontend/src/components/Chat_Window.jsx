@@ -1,6 +1,7 @@
 import React from 'react'
 import Chat_Message from './Chat_Message'
 import { useEffect, useRef } from 'react';
+import kairo from '../assets/kairo.png'
 
 const Chat_Window = ({messages, isAiThinking}) => {
   const bottomRef = useRef(null);
@@ -26,20 +27,19 @@ const Chat_Window = ({messages, isAiThinking}) => {
             {messages.length === 0 ? (
               <div className='flex items-center justify-center h-full text-gray-500 py-12'>
                 <div className='text-center max-w-md'>
-                  <div className='relative mb-8'>
+                    <div className='relative mb-8'>
                     <div className='w-24 h-24 bg-gradient-to-br from-blue-100 via-indigo-100 to-purple-100 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg border border-gray-100/50 relative overflow-hidden'>
                       {/* Animated background */}
                       <div className='absolute inset-0 bg-gradient-to-br from-blue-200/20 to-indigo-200/20 animate-pulse'></div>
-                      <svg className="w-12 h-12 text-blue-500 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
+                      {/* Kairo logo image */}
+                      <img src={kairo} alt="Kairo" className="w-12 h-12 relative z-10" />
                     </div>
                     <div className='absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg animate-bounce'>
                       <div className='w-3 h-3 bg-white rounded-full'></div>
                     </div>
                   </div>
-                  <h3 className='text-2xl font-bold mb-3 bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent'>Welcome to ChatBot</h3>
-                  <p className='text-gray-600 mb-6 leading-relaxed text-base'>Start a conversation with our AI assistant. Ask questions, get help, or just chat!</p>
+                  <h3 className='text-2xl font-bold mb-3 bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent'>Welcome, I'm Kairo</h3>
+                  <p className='text-gray-600 mb-6 leading-relaxed text-base'>Start a conversation with me. Ask questions, get help, or just chat!</p>
                   <div className='flex flex-wrap justify-center gap-3 text-sm'>
                     <span className='px-4 py-2 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 rounded-full border border-blue-200 shadow-sm hover:shadow-md transition-shadow cursor-default'>💡 Ask questions</span>
                     <span className='px-4 py-2 bg-gradient-to-r from-indigo-50 to-indigo-100 text-indigo-700 rounded-full border border-indigo-200 shadow-sm hover:shadow-md transition-shadow cursor-default'>🔧 Get help</span>
@@ -66,7 +66,7 @@ const Chat_Window = ({messages, isAiThinking}) => {
                             <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                             <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
                           </div>
-                          <span className="text-sm text-gray-600 italic">AI is thinking...</span>
+                          <span className="text-sm text-gray-600 italic">typing...</span>
                         </div>
                         
                         {/* Message tail/pointer */}

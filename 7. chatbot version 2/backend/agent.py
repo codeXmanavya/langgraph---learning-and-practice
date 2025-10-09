@@ -38,6 +38,7 @@ class ContextSchema:
 msgObj = []
 # generate function
 def chatNode(state:chatState, runtime:Runtime[ContextSchema]):
+    print(state['messages'])
     for msg in state["messages"]:
         msgObj.append({msg.type, ':', msg.content})
 
@@ -48,7 +49,7 @@ def chatNode(state:chatState, runtime:Runtime[ContextSchema]):
     prompt = f''' Your are an virutal friend , talks like an real friend in short msg type chats, do not need to unneccessarly send large text
      
     Your Question : {newMsg}
-    Recent Conversation : {recentMsg}
+
     Old Conversation : {runtime.context['summary']}
        '''
 

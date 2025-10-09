@@ -33,7 +33,6 @@ class Message(BaseModel):
 async def chatEndpoint(message: Message):
     CONFIG = {'configurable':{'thread_id':message.thread_id}}
     summary = await asyncio.to_thread(get_summary, message)
-    print('summary',summary)
     res = chatbot.invoke({'messages':[HumanMessage(content=message.text)]}, config=CONFIG,context={"summary": summary})
     asyncio.create_task(sumarise_and_update_memory(message, res['messages'][-1].content))
     return {'response':res['messages'][-1].content}

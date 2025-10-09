@@ -78,7 +78,7 @@ const Chat_Input = ({onsend}) => {
         {/* Footer Text */}
         <div className="text-center mt-3">
           <p className="text-xs text-gray-500">
-            ChatBot can make mistakes. Consider checking important information.
+            Kairo can make mistakes. Consider checking important information.
           </p>
         </div>
       </div>

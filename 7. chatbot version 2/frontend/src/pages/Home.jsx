@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar";
 import { useState, useContext } from "react";
 import { UserContext } from "../context/Create_Context";
 import { generateThreadId, saveChat } from "../api/chatApi";
+import kairo from "../assets/kairo.png";
 
 function Home() {
   const { conversationsDetails, messages, messagesSet } = useContext(UserContext);
@@ -112,23 +113,24 @@ function Home() {
             </svg>
           </button>
 
-          <div className="flex items-center gap-3 flex-1 justify-center lg:justify-center">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg lg:shadow-md transform hover:scale-105 transition-transform duration-200">
-              <span className="text-white text-sm font-bold">AI</span>
-            </div>
+          <div className="flex items-left gap-3 flex-1 justify-left lg:justify-left">
+
+              {/* Use kairo.png as header logo */}
+              <img src={kairo} alt="Kairo" className="w-13 h-13 object-contain" />
+ 
             <div className="text-center lg:text-left">
-              <h1 className="text-xl lg:text-2xl font-bold text-gray-800 flex items-center gap-2">
+              <h3 className="text-xl lg:text-xl font-bold text-gray-800 flex items-center gap-2">
                 <span className="hidden lg:inline bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  My ChatBot
+                  Kairo
                 </span>
                 <span className="lg:hidden bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  ChatBot
+                  Kairo
                 </span>
-              </h1>
+              </h3>
               <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span>Online</span>
-                <span className="hidden lg:inline">• Ready to assist</span>
+
               </div>
             </div>
           </div>

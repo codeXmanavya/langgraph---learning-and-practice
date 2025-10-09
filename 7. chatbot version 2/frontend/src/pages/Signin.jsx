@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../context/Create_Context';
 import { generateThreadId } from '../api/chatApi';
+import kairo from '../assets/kairo.png'
 
 
 const SigninPage = () => {
@@ -68,7 +69,7 @@ const SigninPage = () => {
             {/* Header */}
             <div className="text-center mb-8">
               <div className='w-16 h-16 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4'>
-                <span className='text-white text-lg font-bold'>AI</span>
+                <img src={kairo} alt="Kairo" className='w-10 h-10 object-contain' />
               </div>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
                 Welcome Back

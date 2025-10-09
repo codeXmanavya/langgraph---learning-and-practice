@@ -26,10 +26,10 @@ Summary_LLM = ChatGoogleGenerativeAI(model= model, api_key= api_key)
 
 async def sumarise_and_update_memory(message,res):
     msg_dict = {
-        "humanMessage" : message.text,
+        "userMessage" : message.text,
         "AIMessage": res
     }
-    prompt = f''' Summarise human and ai conversation in one short sentence in a way that you don't leave important detail {msg_dict} '''
+    prompt = f''' Summarise this conversation in one very short sentence in a way that you don't leave important detail {msg_dict} '''
     # send to llm to summarise
     summary = Summary_LLM.invoke(prompt).content
     thread_id = message.thread_id

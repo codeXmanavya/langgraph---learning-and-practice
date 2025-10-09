@@ -1,4 +1,5 @@
 import React from 'react'
+import kairo from '../assets/kairo.png'
 
 const Chat_Message = ({text,sender}) => {
   return (
@@ -20,8 +21,12 @@ const Chat_Message = ({text,sender}) => {
           <div className="flex items-center gap-2">
             {sender === 'ai' && (
               <>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-sm "></div>
-                <span className="font-medium pr-5">AI Assistant</span>
+
+                <div className="flex items-center gap-2">
+                  <img src={kairo} alt="Kairo" className="w-4 h-4 rounded-sm" />
+                  <span className="font-medium pr-5">Kairo</span>
+                  
+                </div>
               </>
             )}
             {sender === 'user' && (
