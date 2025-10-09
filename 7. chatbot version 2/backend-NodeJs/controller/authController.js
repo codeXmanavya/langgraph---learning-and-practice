@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "../model/UserModel.js";
 import jwt from 'jsonwebtoken';
 import UserData from "../model/UserDataModel.js";
+import Conversation from "../model/ConversationModel.js";
 
 // Handle user signup
 export const postSignup = async (req,res) => {
@@ -58,6 +59,8 @@ export const postSignin = async (req,res) => {
                 })
             await userData.save();
         }
+
+        
 
         // Generate JWT token
         const token = jwt.sign({userId:user._id}, process.env.JWT_SECRET_KEY, {

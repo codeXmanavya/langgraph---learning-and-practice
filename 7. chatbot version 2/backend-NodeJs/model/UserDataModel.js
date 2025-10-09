@@ -10,6 +10,9 @@ const UserDataSchema = new mongoose.Schema({
     conversations:[{
         conversation_thread_id: {
             type: String
+        },
+        first_message:{
+            type:String,
         }
     }]
 

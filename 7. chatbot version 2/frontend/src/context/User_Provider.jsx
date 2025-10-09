@@ -48,9 +48,8 @@ export const UserProvider = ({children}) => {
 
     // Set conversation thread IDs in state
     const conversationsDetails = (userData) => {
-        const conversationArray = userData[0]?.conversations || [];
-        const conversationThreadIds = conversationArray.map((conv) => conv.conversation_thread_id);
-        setConversations(conversationThreadIds);
+        const conversationsArray = userData[0].conversations
+        setConversations(conversationsArray);
     }
 
     // Set chat messages in state

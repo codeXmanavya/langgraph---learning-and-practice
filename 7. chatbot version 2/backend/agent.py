@@ -5,26 +5,56 @@ from langgraph.graph.message import add_messages
 from typing import TypedDict, Annotated
 from dotenv import load_dotenv
 import os
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.mongodb import MongoDBSaver
+from pymongo import MongoClient
+from langgraph.runtime import Runtime
+from dataclasses import dataclass
+
+
+
+
 
 #LLM
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 model = os.getenv("MODEL")
 LLM = ChatGoogleGenerativeAI(model= model, api_key= api_key)
+Summarise_LLM = ChatGoogleGenerativeAI(model= model, api_key= api_key)
 
 # state
 class chatState(TypedDict):
     messages: Annotated[list[BaseMessage],add_messages]
 
-checkpointer = MemorySaver()
-graph = StateGraph(chatState)
-    
-# generate function
-def chatNode(state:chatState):
-    messages = state["messages"]
+DB_URI = os.getenv('DB_URI')
+client = MongoClient(DB_URI)
+checkpointer = MongoDBSaver(client['message_state'])
 
-    response = LLM.invoke(messages)
+graph = StateGraph(chatState)
+
+@dataclass
+class ContextSchema:
+    summary:str
+    
+msgObj = []
+# generate function
+def chatNode(state:chatState, runtime:Runtime[ContextSchema]):
+    for msg in state["messages"]:
+        msgObj.append({msg.type, ':', msg.content})
+
+    newMsg = msgObj[-1]
+    recentMsg = msgObj[-5:]
+
+
+    prompt = f''' Your are an virutal friend , talks like an real friend in short msg type chats, do not need to unneccessarly send large text
+     
+    Your Question : {newMsg}
+    Recent Conversation : {recentMsg}
+    Old Conversation : {runtime.context['summary']}
+       '''
+
+    response = LLM.invoke(prompt).content
+
+
 
     return {"messages":[response]}
 

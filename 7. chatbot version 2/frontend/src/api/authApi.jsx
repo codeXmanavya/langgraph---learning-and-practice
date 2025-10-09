@@ -33,7 +33,7 @@ export const SigninApi = async (formData) => {
             console.log(data.errors)
             return {success:false, errors:data.errors}
         }
-        return {success:true, message:data.message, user:data.user, userData:data.userData}
+        return {success:true, message:data.message, user:data.user, userData:data.userData,}
     } catch (error) {
         return {success:false, errors:[{msg:error.message}]}
     }

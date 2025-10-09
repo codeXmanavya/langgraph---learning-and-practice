@@ -4,7 +4,7 @@
 # 3. Evaluate and give some feedback and score
 # 4. Based on Evaluation score 
 # -- if score is good then -- end
-# -- if  not then geraterate again with improvement and send to evaluation score till it hit the desired score -- in loop
+# -- if  not then geraterate again with ilmprovement and send to evauation score till it hit the desired score -- in loop
 
 from langgraph.graph import StateGraph, START,END
 from typing import TypedDict, Literal, Annotated

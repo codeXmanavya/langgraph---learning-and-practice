@@ -50,6 +50,9 @@ function Home() {
       // Add AI response to messages state
       messagesSet((prev) => [...prev, { text: data.response, sender: "ai" }]);
 
+      // Hide AI "thinking" indicator
+      setIsAiThinking(false);
+
       // Prepare latest user and AI message for saving
       let newMessage = [
         { text, sender: "user" },
@@ -76,10 +79,7 @@ function Home() {
           sender: "ai",
         },
       ]);
-    } finally {
-      // Hide AI "thinking" indicator
-      setIsAiThinking(false);
-    }
+    } 
   };
 
   return (

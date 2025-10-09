@@ -52,6 +52,7 @@ const SigninPage = () => {
             } else {
               const active_thread_id = generation.thread_id;
               localStorage.setItem('activeThread', active_thread_id);
+              localStorage.setItem('selectedThread', active_thread_id);
             }
             messagesSet([]);
         }
